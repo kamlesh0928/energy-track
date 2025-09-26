@@ -1,4 +1,0 @@
-numpy
-pika
-timesynth
-requests

@@ -1,3 +1,10 @@
-flask
-flask-cors
-pika
+kafka-python-ng
+pymongo
+Flask
+Flask-Cors
+Flask-SocketIO
+python-socketio
+python-engineio
+timesynth
+numpy
+scikit-learn
