@@ -31,7 +31,7 @@ interface AlertsPanelProps {
 export function AlertsPanel({ devices, className }: AlertsPanelProps) {
   const [alerts, setAlerts] = useState<Alert[]>([]);
 
- 
+  // Generate alerts based on device status
   useEffect(() => {
     const newAlerts: Alert[] = [];
     
@@ -56,7 +56,7 @@ export function AlertsPanel({ devices, className }: AlertsPanelProps) {
         });
       }
 
-     
+      // Energy consumption alerts
       if (device.energyConsumption && device.energyConsumption > 600) {
         newAlerts.push({
           id: `${device.id}-energy-${Date.now()}`,
@@ -68,7 +68,7 @@ export function AlertsPanel({ devices, className }: AlertsPanelProps) {
         });
       }
 
-   
+      // Efficiency alerts
       if (device.efficiency && device.efficiency < 70) {
         newAlerts.push({
           id: `${device.id}-efficiency-${Date.now()}`,
@@ -81,7 +81,7 @@ export function AlertsPanel({ devices, className }: AlertsPanelProps) {
       }
     });
 
-   
+    // Only add truly new alerts (not duplicates)
     setAlerts(prev => {
       const existingAlertKeys = new Set(prev.map(a => `${a.deviceId}-${a.type}`));
       const uniqueNewAlerts = newAlerts.filter(alert => 
@@ -89,7 +89,7 @@ export function AlertsPanel({ devices, className }: AlertsPanelProps) {
       );
       
       if (uniqueNewAlerts.length > 0) {
-        return [...uniqueNewAlerts, ...prev].slice(0, 20); 
+        return [...uniqueNewAlerts, ...prev].slice(0, 20); // Keep last 20 alerts
       }
       return prev;
     });
@@ -135,7 +135,7 @@ export function AlertsPanel({ devices, className }: AlertsPanelProps) {
   };
 
   return (
-    <Card className={cn("h-full", className)}>
+    <Card className={cn("", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -168,7 +168,7 @@ export function AlertsPanel({ devices, className }: AlertsPanelProps) {
       </CardHeader>
       
       <CardContent className="pt-0">
-        <ScrollArea className="h-80">
+        <ScrollArea className="h-[600px]">
           {alerts.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-40 text-muted-foreground">
               <CheckCircle className="h-8 w-8 mb-2" />
@@ -181,7 +181,7 @@ export function AlertsPanel({ devices, className }: AlertsPanelProps) {
                 <div
                   key={alert.id}
                   className={cn(
-                    "flex items-start gap-3 p-3 rounded-lg border transition-industrial",
+                    "flex items-start gap-3 p-3 rounded-lg border transition-industrial w-full",
                     alert.acknowledged 
                       ? "bg-muted/50 border-muted opacity-60" 
                       : "bg-background border-border hover:bg-muted/30",
