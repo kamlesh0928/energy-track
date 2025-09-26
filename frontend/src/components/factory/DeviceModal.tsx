@@ -22,9 +22,10 @@ interface DeviceModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDeviceAction: (deviceId: string, action: "shutdown" | "restart") => void;
+  onAlexaToggle: () => void;
 }
 
-export function DeviceModal({ device, open, onOpenChange, onDeviceAction }: DeviceModalProps) {
+export function DeviceModal({ device, open, onOpenChange, onDeviceAction, onAlexaToggle }: DeviceModalProps) {
   if (!device) return null;
 
   const handleShutdown = () => {
@@ -41,19 +42,19 @@ export function DeviceModal({ device, open, onOpenChange, onDeviceAction }: Devi
     switch (sensorType.toLowerCase()) {
       case 'temp':
       case 'temperature':
-        return '🌡️';
+        return <Activity className="h-3 w-3 text-orange-500" />;
       case 'pressure':
-        return '🔧';
+        return <Gauge className="h-3 w-3 text-blue-500" />;
       case 'vibration':
-        return '📳';
+        return <Activity className="h-3 w-3 text-purple-500" />;
       case 'rpm':
-        return '⚡';
+        return <RotateCcw className="h-3 w-3 text-green-500" />;
       case 'torque':
-        return '🔩';
+        return <Settings className="h-3 w-3 text-yellow-500" />;
       case 'current':
-        return '⚡';
+        return <Zap className="h-3 w-3 text-red-500" />;
       default:
-        return '📊';
+        return <Activity className="h-3 w-3 text-gray-500" />;
     }
   };
 
@@ -96,7 +97,7 @@ export function DeviceModal({ device, open, onOpenChange, onDeviceAction }: Devi
         </DialogHeader>
 
         <div className="space-y-3">
-        
+          {/* Live Sensor Readings */}
           <div>
             <div className="flex items-center gap-1 mb-2">
               <Activity className="h-3 w-3 text-primary" />
@@ -104,8 +105,8 @@ export function DeviceModal({ device, open, onOpenChange, onDeviceAction }: Devi
             </div>
             <div className="grid grid-cols-3 gap-1">
               {Object.entries(device.sensors).map(([key, value]) => (
-                <div key={key} className="bg-muted rounded p-1 text-center">
-                  <div className="text-xs">{getSensorIcon(key)}</div>
+                <div key={key} className="bg-gray-700/15 rounded p-1 text-center border-2 border-gray-600/30 shadow-sm">
+                  <div className="text-xs mb-1">{getSensorIcon(key)}</div>
                   <div className="text-xs font-bold text-primary">
                     {typeof value === 'number' ? value.toFixed(0) : value}
                   </div>
@@ -117,20 +118,20 @@ export function DeviceModal({ device, open, onOpenChange, onDeviceAction }: Devi
             </div>
           </div>
 
-       
+          {/* Energy & Performance Metrics */}
           <div>
             <div className="flex items-center gap-1 mb-2">
               <Zap className="h-3 w-3 text-primary" />
               <h3 className="text-xs font-semibold">Performance</h3>
             </div>
             <div className="flex gap-1">
-              <div className="bg-muted rounded p-1 text-center flex-1">
+              <div className="bg-gray-700/10 rounded p-1 text-center flex-1 border border-gray-600/20">
                 <div className="text-[10px] text-muted-foreground">Efficiency</div>
                 <div className="text-sm font-bold text-primary">
                   {device.efficiency || 95}%
                 </div>
               </div>
-              <div className="bg-muted rounded p-1 text-center flex-1">
+              <div className="bg-gray-700/10 rounded p-1 text-center flex-1 border border-gray-600/20">
                 <div className="text-[10px] text-muted-foreground">Energy</div>
                 <div className="text-sm font-bold text-primary">
                   {device.energyConsumption || 450}W
@@ -139,7 +140,7 @@ export function DeviceModal({ device, open, onOpenChange, onDeviceAction }: Devi
             </div>
           </div>
 
-        
+          {/* AI-Powered Diagnosis */}
           {(device.status === 'WARNING' || device.status === 'CRITICAL') && (
             <div>
               <div className="flex items-center gap-2 mb-3">
@@ -199,15 +200,16 @@ export function DeviceModal({ device, open, onOpenChange, onDeviceAction }: Devi
                 Restart
               </Button>
             </div>
-         
+            
+            {/* Ask Alexa Button */}
             <div className="mt-2">
               <Button
                 variant="outline"
                 size="sm"
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white border-none hover:from-blue-600 hover:to-purple-700"
                 onClick={() => {
-                
-                  alert(`Ask Alexa about ${device.id}: "Alexa, what's the status of ${device.id}?"`);
+                  onAlexaToggle();
+                  onOpenChange(false);
                 }}
               >
                 <MessageCircle className="h-3 w-3 mr-1" />
