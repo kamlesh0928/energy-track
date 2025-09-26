@@ -2,72 +2,219 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Industrial IoT Factory Monitoring Design System */
 
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* Industrial Theme - Navy & Steel */
+    --background: 210 25% 98%;
+    --foreground: 210 12% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 12% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 12% 15%;
+
+    /* Industrial Navy Primary */
+    --primary: 210 100% 14%;
+    --primary-foreground: 210 40% 98%;
+    --primary-hover: 210 100% 20%;
+
+    /* Steel Gray Secondary */
+    --secondary: 210 15% 95%;
+    --secondary-foreground: 210 12% 15%;
+
+    --muted: 210 15% 96%;
+    --muted-foreground: 210 8% 46%;
+
+    --accent: 212 100% 50%;
+    --accent-foreground: 210 40% 98%;
+
+    /* Status Colors */
+    --status-normal: 142 76% 36%;
+    --status-warning: 45 93% 47%;
+    --status-critical: 0 84% 60%;
+    --status-offline: 210 8% 46%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 210 15% 91%;
+    --input: 210 15% 91%;
+    --ring: 210 100% 14%;
+
+    /* Industrial Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 14%), hsl(210 100% 20%));
+    --gradient-status: linear-gradient(90deg, hsl(142 76% 36%), hsl(45 93% 47%), hsl(0 84% 60%));
+    --gradient-industrial: linear-gradient(180deg, hsl(210 25% 98%), hsl(210 20% 94%));
+
+    /* Industrial Shadows */
+    --shadow-industrial: 0 4px 12px hsl(210 100% 14% / 0.15);
+    --shadow-status: 0 2px 8px hsl(var(--status-normal) / 0.2);
+    --shadow-critical: 0 4px 16px hsl(var(--status-critical) / 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
-  a:hover {
-    color: #747bff;
+
+  .dark {
+    /* Dark Industrial Theme */
+    --background: 210 20% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 210 18% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 210 18% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 210 100% 14%;
+    --primary-hover: 210 40% 90%;
+
+    --secondary: 210 15% 18%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 210 15% 18%;
+    --muted-foreground: 210 20% 70%;
+
+    --accent: 212 100% 60%;
+    --accent-foreground: 210 20% 8%;
+
+    /* Dark Status Colors */
+    --status-normal: 142 69% 58%;
+    --status-warning: 45 86% 62%;
+    --status-critical: 0 91% 71%;
+    --status-offline: 210 15% 55%;
+
+    --destructive: 0 91% 71%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 210 15% 18%;
+    --input: 210 15% 18%;
+    --ring: 212 100% 60%;
+
+    /* Dark Industrial Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210 40% 98%), hsl(210 40% 90%));
+    --gradient-industrial: linear-gradient(180deg, hsl(210 20% 8%), hsl(210 18% 12%));
+    --shadow-industrial: 0 4px 12px hsl(0 0% 0% / 0.4);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Industrial UI Components */
+  .status-normal {
+    @apply bg-green-600 text-white;
+    background-color: hsl(var(--status-normal));
+  }
+
+  .status-warning {
+    @apply bg-yellow-500 text-black;
+    background-color: hsl(var(--status-warning));
+  }
+
+  .status-critical {
+    @apply bg-red-600 text-white;
+    background-color: hsl(var(--status-critical));
+  }
+
+  .status-offline {
+    @apply bg-gray-500 text-white;
+    background-color: hsl(var(--status-offline));
+  }
+
+  .industrial-gradient {
+    background: var(--gradient-industrial);
+  }
+
+  .status-gradient {
+    background: var(--gradient-status);
+  }
+
+  .industrial-shadow {
+    box-shadow: var(--shadow-industrial);
+  }
+
+  .transition-industrial {
+    transition: var(--transition-smooth);
+  }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full;
+  }
+
+  /* Leaflet Factory Map Customizations */
+  .factory-tooltip {
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+    border: none !important;
+    border-radius: 4px !important;
+    box-shadow: var(--shadow-industrial) !important;
+    font-weight: 500 !important;
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+  }
+  
+  .factory-tooltip::before {
+    border-top-color: hsl(var(--primary)) !important;
+  }
+
+  .factory-map-container {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Ensure modals appear above map */
+  [data-radix-popper-content-wrapper] {
+    z-index: 9999 !important;
+  }
+  
+  [role="dialog"] {
+    z-index: 10000 !important;
   }
 }
