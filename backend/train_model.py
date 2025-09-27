@@ -16,7 +16,7 @@ MODEL_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(MODEL_DIR, 'failure_model.pkl')
 
 def create_synthetic_historical_data(num_records=50000):
-    """Creates a DataFrame of synthetic historical sensor data for the initial model."""
+    
     print("Generating synthetic historical data for bootstrap model...")
     data = []
     base_metrics = {
