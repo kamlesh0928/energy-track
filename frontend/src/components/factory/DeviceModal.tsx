@@ -105,7 +105,7 @@ export function DeviceModal({ device, open, onOpenChange, onDeviceAction, onAlex
             </div>
             <div className="grid grid-cols-3 gap-1">
               {Object.entries(device.sensors).map(([key, value]) => (
-                <div key={key} className="bg-gray-700/15 rounded p-1 text-center border-2 border-gray-600/30 shadow-sm">
+                <div key={key} className="rounded p-1 text-center border-2 shadow-sm text-white" style={{ backgroundColor: 'hsl(210 100% 20%)', borderColor: 'hsl(210 100% 30%)' }}>
                   <div className="text-xs mb-1">{getSensorIcon(key)}</div>
                   <div className="text-xs font-bold text-primary">
                     {typeof value === 'number' ? value.toFixed(0) : value}
@@ -125,13 +125,13 @@ export function DeviceModal({ device, open, onOpenChange, onDeviceAction, onAlex
               <h3 className="text-xs font-semibold">Performance</h3>
             </div>
             <div className="flex gap-1">
-              <div className="bg-gray-700/10 rounded p-1 text-center flex-1 border border-gray-600/20">
+              <div className="rounded p-1 text-center flex-1 border text-white" style={{ backgroundColor: 'hsl(210 100% 20%)', borderColor: 'hsl(210 100% 30%)' }}>
                 <div className="text-[10px] text-muted-foreground">Efficiency</div>
                 <div className="text-sm font-bold text-primary">
                   {device.efficiency || 95}%
                 </div>
               </div>
-              <div className="bg-gray-700/10 rounded p-1 text-center flex-1 border border-gray-600/20">
+              <div className="rounded p-1 text-center flex-1 border text-white" style={{ backgroundColor: 'hsl(210 100% 20%)', borderColor: 'hsl(210 100% 30%)' }}>
                 <div className="text-[10px] text-muted-foreground">Energy</div>
                 <div className="text-sm font-bold text-primary">
                   {device.energyConsumption || 450}W

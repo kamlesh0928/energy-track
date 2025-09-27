@@ -6,6 +6,7 @@ import { StatusBadge } from "./StatusBadge";
 import { KPICard } from "./KPICard";
 import { AlertsPanel } from "./AlertsPanel";
 import { AlexaVoiceChat } from "./AlexaVoiceChat";
+
 import { 
   Activity,
   Zap,
@@ -415,7 +416,7 @@ export function FactoryDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       {/* Header */}
-      <header className="bg-primary text-primary-foreground industrial-shadow sticky top-0 z-40">
+      <header className="text-white industrial-shadow sticky top-0 z-40" style={{ backgroundColor: 'hsl(210 100% 20%)' }}>
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -425,17 +426,19 @@ export function FactoryDashboard() {
             <div className="flex items-center gap-6">
               <button
                 onClick={() => setIsAlexaOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2C13.1 2 14 2.9 14 4V10C14 11.1 13.1 12 12 12S10 11.1 10 10V4C10 2.9 10.9 2 12 2M19 10V12C19 15.3 16.3 18 13 18V20H17V22H7V20H11V18C7.7 18 5 15.3 5 12V10H7V12C7 14.2 8.8 16 11 16H13C15.2 16 17 14.2 17 12V10H19Z"/>
                 </svg>
                 Ask Alexa
               </button>
-              <div className="flex items-center gap-2 px-4 py-2 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground rounded-lg transition-colors">
-                <div className="text-sm opacity-90">Overall Equipment Effectiveness</div>
-                <div className="text-2xl font-bold">{factoryState.oee.toFixed(1)}%</div>
-              </div>
+              <a 
+                href="/dashboard" 
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
+              >
+                <div className="text-lg font-semibold">Dashboard</div>
+              </a>
             </div>
           </div>
         </div>

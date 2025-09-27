@@ -67,7 +67,7 @@ const CustomMapPin = ({ status, isRestarting }: { status: Device['status'], isRe
 export function FactoryMap({ devices, onDeviceClick, className, deviceActionFeedback }: FactoryMapProps) {
 
   return (
-    <div className={`${className} relative bg-gray-100 rounded-lg overflow-hidden`}>
+    <div className={`${className} relative rounded-lg overflow-hidden`} style={{ backgroundColor: 'hsl(210 100% 20%)' }}>
       <img 
         src={factoryBackground} 
         alt="Factory Floor Plan" 
