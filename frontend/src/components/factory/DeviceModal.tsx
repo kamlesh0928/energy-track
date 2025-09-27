@@ -41,7 +41,7 @@ export function DeviceModal({
 
   const handleShutdown = () => {
     try {
-      const response = fetch("http://127.0.0.1:5001/api/shutdown", {
+      const response = fetch(`${import.meta.env.VITE_BACKEND_URL}/api/shutdown`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export function DeviceModal({
 
   const handleRestart = () => {
     try {
-      const response = fetch("http://127.0.0.1:5001/api/restart", {
+      const response = fetch(`${import.meta.env.VITE_BACKEND_URL}/api/restart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
