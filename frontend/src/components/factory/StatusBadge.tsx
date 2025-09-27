@@ -7,28 +7,33 @@ interface StatusBadgeProps {
   size?: "sm" | "md" | "lg";
 }
 
-const statusConfig: Record<DeviceStatus, { label: string; className: string }> = {
-  NORMAL: {
-    label: "Normal",
-    className: "status-normal",
-  },
-  WARNING: {
-    label: "Warning", 
-    className: "status-warning",
-  },
-  CRITICAL: {
-    label: "Critical",
-    className: "status-critical",
-  },
-  OFF: {
-    label: "Offline",
-    className: "status-offline",
-  },
-};
+const statusConfig: Record<DeviceStatus, { label: string; className: string }> =
+  {
+    NORMAL: {
+      label: "Normal",
+      className: "status-normal",
+    },
+    WARNING: {
+      label: "Warning",
+      className: "status-warning",
+    },
+    CRITICAL: {
+      label: "Critical",
+      className: "status-critical",
+    },
+    OFF: {
+      label: "Offline",
+      className: "status-offline",
+    },
+  };
 
-export function StatusBadge({ status, className, size = "md" }: StatusBadgeProps) {
+export function StatusBadge({
+  status,
+  className,
+  size = "md",
+}: StatusBadgeProps) {
   const config = statusConfig[status];
-  
+
   const sizeClasses = {
     sm: "px-2 py-1 text-xs",
     md: "px-3 py-1.5 text-sm",
