@@ -51,5 +51,6 @@ def handle_connect():
 def handle_disconnect():
     print('Client disconnected')
 
-print("Starting Web API and WebSocket server on http://localhost:5001")
-socketio.run(app, host='0.0.0.0', port=5001)
+if __name__ == "__main__":
+    print("Starting Web API and WebSocket server on http://localhost:5001")
+    socketio.run(app, host='0.0.0.0', port=5001)
