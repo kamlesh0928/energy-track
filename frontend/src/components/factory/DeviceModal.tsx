@@ -1,24 +1,19 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { StatusBadge } from "./StatusBadge";
 import { Device } from "@/types/factory";
-import {
-  Activity,
-  Brain,
-  Settings,
+import { 
+  Activity, 
+  Brain, 
+  Settings, 
   AlertTriangle,
   Zap,
   Gauge,
   Power,
   RotateCcw,
-  MessageCircle,
+  MessageCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -30,63 +25,33 @@ interface DeviceModalProps {
   onAlexaToggle: () => void;
 }
 
-export function DeviceModal({
-  device,
-  open,
-  onOpenChange,
-  onDeviceAction,
-  onAlexaToggle,
-}: DeviceModalProps) {
+export function DeviceModal({ device, open, onOpenChange, onDeviceAction, onAlexaToggle }: DeviceModalProps) {
   if (!device) return null;
 
   const handleShutdown = () => {
-    try {
-      const response = fetch("http://127.0.0.1:5001/api/shutdown", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ deviceId: device.id }),
-      });
-
-      onDeviceAction(device.id, "shutdown");
-      onOpenChange(false);
-    } catch (error) {
-      console.error("Error shutting down device:", error);
-    }
+    onDeviceAction(device.id, "shutdown");
+    onOpenChange(false);
   };
 
   const handleRestart = () => {
-    try {
-      const response = fetch("http://127.0.0.1:5001/api/restart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ deviceId: device.id }),
-      });
-
-      onDeviceAction(device.id, "restart");
-      onOpenChange(false);
-    } catch (error) {
-      console.error("Error in restarting device:", error);
-    }
+    onDeviceAction(device.id, "restart");
+    onOpenChange(false);
   };
 
   const getSensorIcon = (sensorType: string) => {
     switch (sensorType.toLowerCase()) {
-      case "temp":
-      case "temperature":
+      case 'temp':
+      case 'temperature':
         return <Activity className="h-3 w-3 text-orange-500" />;
-      case "pressure":
+      case 'pressure':
         return <Gauge className="h-3 w-3 text-blue-500" />;
-      case "vibration":
+      case 'vibration':
         return <Activity className="h-3 w-3 text-purple-500" />;
-      case "rpm":
+      case 'rpm':
         return <RotateCcw className="h-3 w-3 text-green-500" />;
-      case "torque":
+      case 'torque':
         return <Settings className="h-3 w-3 text-yellow-500" />;
-      case "current":
+      case 'current':
         return <Zap className="h-3 w-3 text-red-500" />;
       default:
         return <Activity className="h-3 w-3 text-gray-500" />;
@@ -95,21 +60,21 @@ export function DeviceModal({
 
   const getSensorUnit = (sensorType: string) => {
     switch (sensorType.toLowerCase()) {
-      case "temp":
-      case "temperature":
-        return "°C";
-      case "pressure":
-        return "PSI";
-      case "vibration":
-        return "mm/s";
-      case "rpm":
-        return "RPM";
-      case "torque":
-        return "Nm";
-      case "current":
-        return "A";
+      case 'temp':
+      case 'temperature':
+        return '°C';
+      case 'pressure':
+        return 'PSI';
+      case 'vibration':
+        return 'mm/s';
+      case 'rpm':
+        return 'RPM';
+      case 'torque':
+        return 'Nm';
+      case 'current':
+        return 'A';
       default:
-        return "";
+        return '';
     }
   };
 
@@ -124,13 +89,9 @@ export function DeviceModal({
             <StatusBadge status={device.status} size="sm" />
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">
-              {device.type.replace("_", " ")}
-            </p>
+            <p className="text-xs text-muted-foreground">{device.type.replace('_', ' ')}</p>
             {device.process && (
-              <p className="text-[10px] font-medium text-blue-600 mt-1">
-                {device.process}
-              </p>
+              <p className="text-[10px] font-medium text-blue-600 mt-1">{device.process}</p>
             )}
           </div>
         </DialogHeader>
@@ -144,13 +105,10 @@ export function DeviceModal({
             </div>
             <div className="grid grid-cols-3 gap-1">
               {Object.entries(device.sensors).map(([key, value]) => (
-                <div
-                  key={key}
-                  className="bg-gray-700/15 rounded p-1 text-center border-2 border-gray-600/30 shadow-sm"
-                >
+                <div key={key} className="rounded p-1 text-center border-2 shadow-sm text-white" style={{ backgroundColor: 'hsl(210 100% 20%)', borderColor: 'hsl(210 100% 30%)' }}>
                   <div className="text-xs mb-1">{getSensorIcon(key)}</div>
                   <div className="text-xs font-bold text-primary">
-                    {typeof value === "number" ? value.toFixed(0) : value}
+                    {typeof value === 'number' ? value.toFixed(0) : value}
                   </div>
                   <div className="text-[10px] text-muted-foreground capitalize truncate">
                     {key}
@@ -167,15 +125,13 @@ export function DeviceModal({
               <h3 className="text-xs font-semibold">Performance</h3>
             </div>
             <div className="flex gap-1">
-              <div className="bg-gray-700/10 rounded p-1 text-center flex-1 border border-gray-600/20">
-                <div className="text-[10px] text-muted-foreground">
-                  Efficiency
-                </div>
+              <div className="rounded p-1 text-center flex-1 border text-white" style={{ backgroundColor: 'hsl(210 100% 20%)', borderColor: 'hsl(210 100% 30%)' }}>
+                <div className="text-[10px] text-muted-foreground">Efficiency</div>
                 <div className="text-sm font-bold text-primary">
                   {device.efficiency || 95}%
                 </div>
               </div>
-              <div className="bg-gray-700/10 rounded p-1 text-center flex-1 border border-gray-600/20">
+              <div className="rounded p-1 text-center flex-1 border text-white" style={{ backgroundColor: 'hsl(210 100% 20%)', borderColor: 'hsl(210 100% 30%)' }}>
                 <div className="text-[10px] text-muted-foreground">Energy</div>
                 <div className="text-sm font-bold text-primary">
                   {device.energyConsumption || 450}W
@@ -185,38 +141,28 @@ export function DeviceModal({
           </div>
 
           {/* AI-Powered Diagnosis */}
-          {(device.status === "WARNING" || device.status === "CRITICAL") && (
+          {(device.status === 'WARNING' || device.status === 'CRITICAL') && (
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <Brain className="h-4 w-4 text-primary" />
                 <h3 className="text-sm font-semibold">AI Diagnosis</h3>
               </div>
-              <Card
-                className={cn(
-                  "border-l-4",
-                  device.status === "CRITICAL"
-                    ? "border-l-status-critical bg-red-50/50"
-                    : "border-l-status-warning bg-yellow-50/50"
-                )}
-              >
+              <Card className={cn(
+                "border-l-4",
+                device.status === 'CRITICAL' ? "border-l-status-critical bg-red-50/50" : "border-l-status-warning bg-yellow-50/50"
+              )}>
                 <CardContent className="pt-3 pb-2">
                   <div className="space-y-2">
                     <div>
-                      <span className="text-xs font-medium text-foreground">
-                        Last Anomaly:
-                      </span>
+                      <span className="text-xs font-medium text-foreground">Last Anomaly:</span>
                       <span className="ml-1 text-xs text-muted-foreground">
-                        {device.lastAnomaly?.toLocaleString() ||
-                          new Date().toLocaleString()}
+                        {device.lastAnomaly?.toLocaleString() || new Date().toLocaleString()}
                       </span>
                     </div>
                     <div>
-                      <span className="text-xs font-medium text-foreground">
-                        Analysis:
-                      </span>
+                      <span className="text-xs font-medium text-foreground">Analysis:</span>
                       <p className="mt-1 text-xs text-foreground">
-                        {device.aiAnalysis ||
-                          "Anomaly detected in sensor readings."}
+                        {device.aiAnalysis || "Anomaly detected in sensor readings."}
                       </p>
                     </div>
                   </div>
@@ -238,7 +184,7 @@ export function DeviceModal({
                 variant="emergency"
                 size="sm"
                 onClick={handleShutdown}
-                disabled={device.status === "OFF"}
+                disabled={device.status === 'OFF'}
                 className="flex-1"
               >
                 <Power className="h-3 w-3 mr-1" />
@@ -254,7 +200,7 @@ export function DeviceModal({
                 Restart
               </Button>
             </div>
-
+            
             {/* Ask Alexa Button */}
             <div className="mt-2">
               <Button

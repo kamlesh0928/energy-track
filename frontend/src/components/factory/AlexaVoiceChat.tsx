@@ -230,7 +230,7 @@ export function AlexaVoiceChat({
 
               {isListening && (
                 <div className="flex justify-end">
-                  <div className="bg-gray-100 border border-gray-200 rounded-lg rounded-br-none p-2 text-sm text-gray-600">
+                  <div className="border rounded-lg rounded-br-none p-2 text-sm text-white" style={{ backgroundColor: 'hsl(210 100% 20%)' }}>
                     Listening...
                   </div>
                 </div>
@@ -246,7 +246,7 @@ export function AlexaVoiceChat({
             </div>
           </ScrollArea>
 
-          <div className="p-3 border-t bg-gray-50 rounded-b-lg">
+          <div className="p-3 border-t rounded-b-lg" style={{ backgroundColor: 'hsl(210 100% 20%)' }}>
             <div className="flex items-center justify-center gap-4">
               <Button
                 variant={isListening ? "destructive" : "default"}

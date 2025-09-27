@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    /* Industrial Theme - Navy & Steel */
+    /* Navy Blue Industrial Theme */
     --background: 210 25% 98%;
     --foreground: 210 12% 15%;
 
@@ -16,10 +16,14 @@
     --popover: 0 0% 100%;
     --popover-foreground: 210 12% 15%;
 
-    /* Industrial Navy Primary */
-    --primary: 210 100% 14%;
+    /* Navy Blue Primary */
+    --primary: 210 100% 20%;
     --primary-foreground: 210 40% 98%;
     --primary-hover: 210 100% 20%;
+    --primary-glow: 210 100% 25%;
+    
+    /* Navbar Color */
+    --navbar: 210 100% 20%;
 
     /* Steel Gray Secondary */
     --secondary: 210 15% 95%;
@@ -28,11 +32,11 @@
     --muted: 210 15% 96%;
     --muted-foreground: 210 8% 46%;
 
-    --accent: 212 100% 50%;
+    --accent: 210 100% 20%;
     --accent-foreground: 210 40% 98%;
 
-    /* Status Colors */
-    --status-normal: 142 76% 36%;
+    /* Status Colors - Navy Blue Theme */
+    --status-normal: 210 100% 20%;
     --status-warning: 45 93% 47%;
     --status-critical: 0 84% 60%;
     --status-offline: 210 8% 46%;
@@ -42,29 +46,19 @@
 
     --border: 210 15% 91%;
     --input: 210 15% 91%;
-    --ring: 210 100% 14%;
+    --ring: 210 100% 20%;
 
-    /* Industrial Gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(210 100% 14%),
-      hsl(210 100% 20%)
-    );
-    --gradient-status: linear-gradient(
-      90deg,
-      hsl(142 76% 36%),
-      hsl(45 93% 47%),
-      hsl(0 84% 60%)
-    );
-    --gradient-industrial: linear-gradient(
-      180deg,
-      hsl(210 25% 98%),
-      hsl(210 20% 94%)
-    );
+    /* Navy Blue Industrial Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 20%), hsl(210 100% 20%));
+    --gradient-navy: linear-gradient(135deg, hsl(210 100% 20%), hsl(210 100% 20%));
+    --gradient-status: linear-gradient(90deg, hsl(210 100% 20%), hsl(210 100% 20%));
+    --gradient-industrial: linear-gradient(180deg, hsl(210 25% 98%), hsl(210 20% 94%));
 
-    /* Industrial Shadows */
-    --shadow-industrial: 0 4px 12px hsl(210 100% 14% / 0.15);
-    --shadow-status: 0 2px 8px hsl(var(--status-normal) / 0.2);
+    /* Navy Blue Industrial Shadows */
+    --shadow-industrial: 0 4px 12px hsl(210 100% 20% / 0.15);
+    --shadow-navy: 0 4px 16px hsl(210 100% 20% / 0.25);
+    --shadow-navy-glow: 0 0 30px hsl(210 100% 20% / 0.4);
+    --shadow-status: 0 2px 8px hsl(210 100% 20% / 0.2);
     --shadow-critical: 0 4px 16px hsl(var(--status-critical) / 0.3);
 
     /* Animations */
@@ -91,7 +85,7 @@
   }
 
   .dark {
-    /* Dark Industrial Theme */
+    /* Dark Navy Blue Industrial Theme */
     --background: 210 20% 8%;
     --foreground: 210 40% 98%;
 
@@ -102,7 +96,7 @@
     --popover-foreground: 210 40% 98%;
 
     --primary: 210 40% 98%;
-    --primary-foreground: 210 100% 14%;
+    --primary-foreground: 210 100% 20%;
     --primary-hover: 210 40% 90%;
 
     --secondary: 210 15% 18%;
@@ -111,11 +105,11 @@
     --muted: 210 15% 18%;
     --muted-foreground: 210 20% 70%;
 
-    --accent: 212 100% 60%;
+    --accent: 210 100% 30%;
     --accent-foreground: 210 20% 8%;
 
-    /* Dark Status Colors */
-    --status-normal: 142 69% 58%;
+    /* Dark Status Colors - Navy Blue Theme */
+    --status-normal: 210 100% 30%;
     --status-warning: 45 86% 62%;
     --status-critical: 0 91% 71%;
     --status-offline: 210 15% 55%;
@@ -125,20 +119,15 @@
 
     --border: 210 15% 18%;
     --input: 210 15% 18%;
-    --ring: 212 100% 60%;
+    --ring: 210 100% 30%;
 
-    /* Dark Industrial Gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(210 40% 98%),
-      hsl(210 40% 90%)
-    );
-    --gradient-industrial: linear-gradient(
-      180deg,
-      hsl(210 20% 8%),
-      hsl(210 18% 12%)
-    );
+    /* Dark Navy Blue Industrial Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210 40% 98%), hsl(210 40% 90%));
+    --gradient-navy: linear-gradient(135deg, hsl(210 100% 20%), hsl(210 100% 30%));
+    --gradient-industrial: linear-gradient(180deg, hsl(210 20% 8%), hsl(210 18% 12%));
     --shadow-industrial: 0 4px 12px hsl(0 0% 0% / 0.4);
+    --shadow-navy: 0 4px 16px hsl(210 100% 20% / 0.3);
+    --shadow-navy-glow: 0 0 30px hsl(210 100% 30% / 0.2);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -220,7 +209,7 @@
     font-size: 12px !important;
     padding: 4px 8px !important;
   }
-
+  
   .factory-tooltip::before {
     border-top-color: hsl(var(--primary)) !important;
   }
@@ -234,7 +223,7 @@
   [data-radix-popper-content-wrapper] {
     z-index: 9999 !important;
   }
-
+  
   [role="dialog"] {
     z-index: 10000 !important;
   }
