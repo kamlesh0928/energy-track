@@ -24,8 +24,10 @@ export function FactoryDashboard() {
   useEffect(() => {
     const fetchDevices = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5001/api/devices");
-        if (!response.ok) {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/devices`
+        );
+        if (!response.ok) {``
           throw new Error("Failed to fetch devices");
         }
         const data: Device[] = await response.json();
