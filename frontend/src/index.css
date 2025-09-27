@@ -45,9 +45,22 @@
     --ring: 210 100% 14%;
 
     /* Industrial Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(210 100% 14%), hsl(210 100% 20%));
-    --gradient-status: linear-gradient(90deg, hsl(142 76% 36%), hsl(45 93% 47%), hsl(0 84% 60%));
-    --gradient-industrial: linear-gradient(180deg, hsl(210 25% 98%), hsl(210 20% 94%));
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(210 100% 14%),
+      hsl(210 100% 20%)
+    );
+    --gradient-status: linear-gradient(
+      90deg,
+      hsl(142 76% 36%),
+      hsl(45 93% 47%),
+      hsl(0 84% 60%)
+    );
+    --gradient-industrial: linear-gradient(
+      180deg,
+      hsl(210 25% 98%),
+      hsl(210 20% 94%)
+    );
 
     /* Industrial Shadows */
     --shadow-industrial: 0 4px 12px hsl(210 100% 14% / 0.15);
@@ -115,8 +128,16 @@
     --ring: 212 100% 60%;
 
     /* Dark Industrial Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(210 40% 98%), hsl(210 40% 90%));
-    --gradient-industrial: linear-gradient(180deg, hsl(210 20% 8%), hsl(210 18% 12%));
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(210 40% 98%),
+      hsl(210 40% 90%)
+    );
+    --gradient-industrial: linear-gradient(
+      180deg,
+      hsl(210 20% 8%),
+      hsl(210 18% 12%)
+    );
     --shadow-industrial: 0 4px 12px hsl(0 0% 0% / 0.4);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -199,7 +220,7 @@
     font-size: 12px !important;
     padding: 4px 8px !important;
   }
-  
+
   .factory-tooltip::before {
     border-top-color: hsl(var(--primary)) !important;
   }
@@ -213,7 +234,7 @@
   [data-radix-popper-content-wrapper] {
     z-index: 9999 !important;
   }
-  
+
   [role="dialog"] {
     z-index: 10000 !important;
   }

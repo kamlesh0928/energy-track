@@ -13,7 +13,7 @@ DEST_TOPIC = 'ml-insights'
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'failure_model.pkl')
 if not os.path.exists(MODEL_PATH):
     print(f"Error: Model file not found at {MODEL_PATH}")
-    print("Please run 'python ml_service/train_model.py' first to train and save the model.")
+    print("Please run 'python train_model.py' first to train and save the model.")
     sys.exit(1)
     
 model = joblib.load(MODEL_PATH)
