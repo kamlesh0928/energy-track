@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 interface Message {
   id: string;
   text: string;
-  sender: 'user' | 'bot';
+  sender: "user" | "bot";
   timestamp: Date;
 }
 
@@ -16,13 +16,13 @@ export function ChatSystem() {
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
-      text: 'Hello! I\'m Alexa, your smart factory voice assistant. I can help you with device status, energy consumption, safety protocols, and system optimization. What would you like to know?',
-      sender: 'bot',
+      id: "1",
+      text: "Hello! I'm Alexa, your smart factory voice assistant. I can help you with device status, energy consumption, safety protocols, and system optimization. What would you like to know?",
+      sender: "bot",
       timestamp: new Date(),
-    }
+    },
   ]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -36,32 +36,38 @@ export function ChatSystem() {
 
   const generateResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
-    
-    if (lowerMessage.includes('energy') || lowerMessage.includes('consumption')) {
-      return 'Current total energy consumption is around 3,980 kW across all devices. The system is optimized for energy efficiency with smart scheduling algorithms reducing consumption by 5.2% this hour.';
+
+    if (
+      lowerMessage.includes("energy") ||
+      lowerMessage.includes("consumption")
+    ) {
+      return "Current total energy consumption is around 3,980 kW across all devices. The system is optimized for energy efficiency with smart scheduling algorithms reducing consumption by 5.2% this hour.";
     }
-    
-    if (lowerMessage.includes('status') || lowerMessage.includes('device')) {
-      return 'All devices are currently operating normally. 10/10 devices are online with 95%+ efficiency. No critical alerts detected. The OEE (Overall Equipment Effectiveness) is at 93.2%.';
+
+    if (lowerMessage.includes("status") || lowerMessage.includes("device")) {
+      return "All devices are currently operating normally. 10/10 devices are online with 95%+ efficiency. No critical alerts detected. The OEE (Overall Equipment Effectiveness) is at 93.2%.";
     }
-    
-    if (lowerMessage.includes('safety') || lowerMessage.includes('alert')) {
-      return 'Safety systems are fully operational. All temperature, pressure, and vibration sensors are within normal parameters. Emergency shutdown protocols are active and ready.';
+
+    if (lowerMessage.includes("safety") || lowerMessage.includes("alert")) {
+      return "Safety systems are fully operational. All temperature, pressure, and vibration sensors are within normal parameters. Emergency shutdown protocols are active and ready.";
     }
-    
-    if (lowerMessage.includes('optimize') || lowerMessage.includes('improve')) {
-      return 'Based on current patterns, I recommend: 1) Schedule maintenance for ARM-2 during low-demand hours, 2) Consider load balancing between CNC mills, 3) Monitor LATHE-2 temperature trends for efficiency gains.';
+
+    if (lowerMessage.includes("optimize") || lowerMessage.includes("improve")) {
+      return "Based on current patterns, I recommend: 1) Schedule maintenance for ARM-2 during low-demand hours, 2) Consider load balancing between CNC mills, 3) Monitor LATHE-2 temperature trends for efficiency gains.";
     }
-    
-    if (lowerMessage.includes('temperature') || lowerMessage.includes('temp')) {
-      return 'Temperature readings across the factory: CNC mills averaging 72°C, Robot arms at 60°C, Lathes at 66°C, and Drills at 56°C. All within safe operational limits.';
+
+    if (lowerMessage.includes("temperature") || lowerMessage.includes("temp")) {
+      return "Temperature readings across the factory: CNC mills averaging 72°C, Robot arms at 60°C, Lathes at 66°C, and Drills at 56°C. All within safe operational limits.";
     }
-    
-    if (lowerMessage.includes('help') || lowerMessage.includes('what can you')) {
-      return 'I can help with: Device status monitoring, Energy consumption analysis, Safety protocol information, Optimization recommendations, Maintenance scheduling, Alert explanations, and System troubleshooting. Just ask me anything!';
+
+    if (
+      lowerMessage.includes("help") ||
+      lowerMessage.includes("what can you")
+    ) {
+      return "I can help with: Device status monitoring, Energy consumption analysis, Safety protocol information, Optimization recommendations, Maintenance scheduling, Alert explanations, and System troubleshooting. Just ask me anything!";
     }
-    
-    return 'I understand you\'re asking about the factory systems. Could you be more specific? I can help with device status, energy consumption, safety alerts, optimization suggestions, or general system information.';
+
+    return "I understand you're asking about the factory systems. Could you be more specific? I can help with device status, energy consumption, safety alerts, optimization suggestions, or general system information.";
   };
 
   const handleSendMessage = async () => {
@@ -70,12 +76,12 @@ export function ChatSystem() {
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputValue,
-      sender: 'user',
+      sender: "user",
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
     setIsTyping(true);
 
     // Simulate bot typing delay
@@ -83,17 +89,17 @@ export function ChatSystem() {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: generateResponse(inputValue),
-        sender: 'bot',
+        sender: "bot",
         timestamp: new Date(),
       };
-      
-      setMessages(prev => [...prev, botResponse]);
+
+      setMessages((prev) => [...prev, botResponse]);
       setIsTyping(false);
     }, 1000 + Math.random() * 1000);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSendMessage();
     }
   };
@@ -125,7 +131,11 @@ export function ChatSystem() {
             className="h-8 w-8 text-white hover:bg-white/10"
             onClick={() => setIsMinimized(!isMinimized)}
           >
-            {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+            {isMinimized ? (
+              <Maximize2 className="h-4 w-4" />
+            ) : (
+              <Minimize2 className="h-4 w-4" />
+            )}
           </Button>
           <Button
             variant="ghost"
@@ -145,13 +155,15 @@ export function ChatSystem() {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${
+                  message.sender === "user" ? "justify-end" : "justify-start"
+                }`}
               >
                 <div
                   className={`max-w-[80%] p-3 rounded-lg ${
-                    message.sender === 'user'
-                      ? 'bg-primary text-primary-foreground ml-auto'
-                      : 'bg-muted text-foreground'
+                    message.sender === "user"
+                      ? "bg-primary text-primary-foreground ml-auto"
+                      : "bg-muted text-foreground"
                   }`}
                 >
                   <p className="text-sm">{message.text}</p>
@@ -161,14 +173,20 @@ export function ChatSystem() {
                 </div>
               </div>
             ))}
-            
+
             {isTyping && (
               <div className="flex justify-start">
                 <div className="bg-muted text-foreground p-3 rounded-lg">
                   <div className="flex space-x-1">
                     <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div
+                      className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                      style={{ animationDelay: "0.1s" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -186,7 +204,7 @@ export function ChatSystem() {
                 placeholder="Ask about devices, energy, safety..."
                 className="flex-1"
               />
-              <Button 
+              <Button
                 onClick={handleSendMessage}
                 size="icon"
                 disabled={!inputValue.trim()}

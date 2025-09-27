@@ -21,11 +21,12 @@ collection = db[MONGO_COLLECTION]
 @app.route('/api/devices', methods=["GET"])
 def get_devices():
     devices = list(collection.find())
+    print(f"Fetched {len(devices)} devices from database.")
     return json.loads(json_util.dumps(devices))
 
 @app.route('/api/restart', methods=['POST'])
 def restart_devices():
-    device_id = request.json.get('id')
+    device_id = request.json.get('deviceId')
     if not device_id:
         return jsonify({"status": "error", "message": "Device ID is required."}), 400
     
@@ -34,7 +35,7 @@ def restart_devices():
 
 @app.route('/api/shutdown', methods=['POST'])
 def shutdown_devices():
-    device_id = request.json.get('id')
+    device_id = request.json.get('deviceId')
     if not device_id:
         return jsonify({"status": "error", "message": "Device ID is required."}), 400
 
