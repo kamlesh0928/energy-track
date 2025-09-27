@@ -81,7 +81,6 @@ export function AlertsPanel({ devices, className }: AlertsPanelProps) {
       }
     });
 
-    // Only add truly new alerts (not duplicates)
     setAlerts((prev) => {
       const existingAlertKeys = new Set(
         prev.map((a) => `${a.deviceId}-${a.type}`)
@@ -91,7 +90,7 @@ export function AlertsPanel({ devices, className }: AlertsPanelProps) {
       );
 
       if (uniqueNewAlerts.length > 0) {
-        return [...uniqueNewAlerts, ...prev].slice(0, 20); // Keep last 20 alerts
+        return [...uniqueNewAlerts, ...prev].slice(0, 20);
       }
       return prev;
     });

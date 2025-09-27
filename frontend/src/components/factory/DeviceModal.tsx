@@ -41,13 +41,16 @@ export function DeviceModal({
 
   const handleShutdown = () => {
     try {
-      const response = fetch(`${import.meta.env.VITE_BACKEND_URL}/api/shutdown`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ deviceId: device.id }),
-      });
+      const response = fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/shutdown`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ deviceId: device.id }),
+        }
+      );
 
       onDeviceAction(device.id, "shutdown");
       onOpenChange(false);
@@ -58,13 +61,16 @@ export function DeviceModal({
 
   const handleRestart = () => {
     try {
-      const response = fetch(`${import.meta.env.VITE_BACKEND_URL}/api/restart`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ deviceId: device.id }),
-      });
+      const response = fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/restart`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ deviceId: device.id }),
+        }
+      );
 
       onDeviceAction(device.id, "restart");
       onOpenChange(false);
@@ -121,7 +127,11 @@ export function DeviceModal({
             <DialogTitle className="text-lg font-bold text-primary">
               {device.id}
             </DialogTitle>
-            <StatusBadge status={device.status} size="sm" />
+            <StatusBadge
+              className="bg-green-500"
+              status={device.status}
+              size="sm"
+            />
           </div>
           <div>
             <p className="text-xs text-muted-foreground">
@@ -146,11 +156,11 @@ export function DeviceModal({
               {Object.entries(device.sensors).map(([key, value]) => (
                 <div
                   key={key}
-                  className="rounded p-1 text-center border-2 shadow-sm text-white"
-                  style={{
-                    backgroundColor: "hsl(210 100% 20%)",
-                    borderColor: "hsl(210 100% 30%)",
-                  }}
+                  className="rounded p-1 text-center border-2 shadow-sm text-black"
+                  // style={{
+                  //   backgroundColor: "hsl(210 100% 20%)",
+                  //   borderColor: "hsl(210 100% 30%)",
+                  // }}
                 >
                   <div className="text-xs mb-1">{getSensorIcon(key)}</div>
                   <div className="text-xs font-bold text-primary">
@@ -172,11 +182,11 @@ export function DeviceModal({
             </div>
             <div className="flex gap-1">
               <div
-                className="rounded p-1 text-center flex-1 border text-white"
-                style={{
-                  backgroundColor: "hsl(210 100% 20%)",
-                  borderColor: "hsl(210 100% 30%)",
-                }}
+                className="rounded p-1 text-center flex-1 border text-black"
+                // style={{
+                //   backgroundColor: "hsl(210 100% 20%)",
+                //   borderColor: "hsl(210 100% 30%)",
+                // }}
               >
                 <div className="text-[10px] text-muted-foreground">
                   Efficiency
@@ -186,11 +196,11 @@ export function DeviceModal({
                 </div>
               </div>
               <div
-                className="rounded p-1 text-center flex-1 border text-white"
-                style={{
-                  backgroundColor: "hsl(210 100% 20%)",
-                  borderColor: "hsl(210 100% 30%)",
-                }}
+                className="rounded p-1 text-center flex-1 border text-black"
+                // style={{
+                //   backgroundColor: "hsl(210 100% 20%)",
+                //   borderColor: "hsl(210 100% 30%)",
+                // }}
               >
                 <div className="text-[10px] text-muted-foreground">Energy</div>
                 <div className="text-sm font-bold text-primary">
