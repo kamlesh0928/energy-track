@@ -5,6 +5,5 @@ Flask-Cors
 Flask-SocketIO
 python-socketio
 python-engineio
-timesynth
 numpy
 scikit-learn
