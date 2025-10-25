@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "energy-track-api"
+version = "0.1.0"
+description = ""
+authors = ["Kamlesh Kumar <kamlesh@astrowatt.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.92.0"
+uvicorn = "^0.20.0"
+pydantic = {extras = ["email"], version = "^1.10.5"}
+SQLAlchemy = "^2.0.4"
+tenacity = "^8.2.1"
+psycopg2-binary = "^2.9.5"
+alembic = "^1.9.4"
+python-multipart = "^0.0.5"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+jinja2 = "^3.1.2"
+emails = "^0.6"
+pytz = "^2023.3"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+mypy = "^1.0.1"
+flake8 = "^6.0.0"
+black = "^23.1.0"
+isort = "^5.12.0"
+autoflake = "^2.0.1"
+pytest-cov = "^4.0.0"
+freezegun = "^1.2.2"
