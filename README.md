@@ -102,15 +102,3 @@ Built using React or Grafana, it displays metrics and enables remote control sim
 | **Containerization** | Docker, Docker Compose |
 | **Data Transport Format** | JSON over Kafka Topics |
 
----
-
-## License
-
-This project is licensed under the MIT License.  
-It can be used, modified, or extended for educational, research, or industrial prototype purposes.
-
----
-
-## Credits
-
-Developed as part of a data engineering and IoT simulation project focusing on real-time data streaming, analytics, and machine learning for smart factory environments.
