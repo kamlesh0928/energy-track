@@ -1,9 +1,41 @@
 import { useState, useEffect, useCallback } from "react";
+import { io, Socket } from "socket.io-client";
 import { Device, FactoryState, KPIData } from "@/types/factory";
 import { FactoryMap } from "./FactoryMap";
 import { DeviceModal } from "./DeviceModal";
 import { AlertsPanel } from "./AlertsPanel";
 import { AlexaVoiceChat } from "./AlexaVoiceChat";
+import { toast } from "sonner"; // Assuming sonner is used for toasts
+
+// --- Helper: KPI Calculation ---
+const calculateKPIs = (devices: Device[]) => {
+  const totalDevices = devices.length;
+  if (totalDevices === 0)
+    return { oee: 0, plantStatus: "NORMAL" as const, totalEnergy: 0 };
+
+  const onlineDevices = devices.filter((d) => d.isOnline).length;
+  const normalDevices = devices.filter((d) => d.status === "NORMAL").length;
+
+  const availability = onlineDevices / totalDevices;
+  const quality = onlineDevices > 0 ? normalDevices / onlineDevices : 0;
+  const performance = 0.95; // Benchmark
+
+  const oee = availability * quality * performance * 100;
+
+  const totalEnergy = devices.reduce(
+    (sum, d) => sum + (d.energyConsumption || 0),
+    0
+  );
+
+  const criticalCount = devices.filter((d) => d.status === "CRITICAL").length;
+  const warningCount = devices.filter((d) => d.status === "WARNING").length;
+
+  let plantStatus: "NORMAL" | "WARNING" | "CRITICAL" = "NORMAL";
+  if (criticalCount > 0) plantStatus = "CRITICAL";
+  else if (warningCount > 0) plantStatus = "WARNING";
+
+  return { oee, plantStatus, totalEnergy };
+};
 
 export function FactoryDashboard() {
   const [factoryState, setFactoryState] = useState<FactoryState>({
@@ -20,190 +52,120 @@ export function FactoryDashboard() {
     action: "shutdown" | "restart";
   } | null>(null);
   const [isAlexaOpen, setIsAlexaOpen] = useState(false);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
+  // 1. Initial Data Fetch
   useEffect(() => {
     const fetchDevices = async () => {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/devices`
-        );
-        if (!response.ok) {``
-          throw new Error("Failed to fetch devices");
-        }
+        // Uses the Vite proxy, so just /api works
+        const response = await fetch("/api/devices");
+        if (!response.ok) throw new Error("Backend unavailable");
+
         const data: Device[] = await response.json();
 
-        // Optional: Map data if needed (e.g., handle _id)
-        const mappedDevices = data.map((d) => ({
-          ...d,
-          id: d.id || "unknown",
-        }));
-
-        // Calculate initial KPIs similar to updateSimulation
-        const totalDevices = mappedDevices.length;
-        const onlineDevices = mappedDevices.filter(
-          (d) => d.status !== "OFF"
-        ).length;
-        const normalDevices = mappedDevices.filter(
-          (d) => d.status === "NORMAL"
-        ).length;
-
-        const availability = onlineDevices / totalDevices;
-        const quality = normalDevices / onlineDevices || 0;
-        const performance = 0.95; // Assumed performance rate
-        const oee = availability * quality * performance * 100;
-
-        const criticalDevices = mappedDevices.filter(
-          (d) => d.status === "CRITICAL"
-        );
-        const warningDevices = mappedDevices.filter(
-          (d) => d.status === "WARNING"
-        );
-
-        let plantStatus: Device["status"] = "NORMAL";
-        if (criticalDevices.length > 0) plantStatus = "CRITICAL";
-        else if (warningDevices.length > 0) plantStatus = "WARNING";
-
-        const totalEnergyConsumption = mappedDevices.reduce((sum, device) => {
-          return sum + (device.energyConsumption || 0);
-        }, 0);
+        // Ensure ID string consistency
+        const mappedDevices = data.map((d) => ({ ...d, id: String(d.id) }));
+        const kpis = calculateKPIs(mappedDevices);
 
         setFactoryState({
           devices: mappedDevices,
-          totalEnergyConsumption,
-          oee,
-          plantStatus,
+          totalEnergyConsumption: kpis.totalEnergy,
+          oee: kpis.oee,
+          plantStatus: kpis.plantStatus,
           lastUpdated: new Date(),
         });
       } catch (error) {
-        console.error("Error fetching devices:", error);
+        console.error("Fetch error:", error);
+        toast.error("Could not load initial factory data.");
       }
     };
 
     fetchDevices();
   }, []);
 
-  // Simulation logic
-  const updateSimulation = useCallback(() => {
-    setFactoryState((prev) => {
-      const updatedDevices = prev.devices.map((device) => {
-        if (device.status === "OFF") return device;
+  // 2. Real-Time WebSocket Connection
+  useEffect(() => {
+    // Connects via the Vite proxy to localhost:5001
+    const newSocket = io({ path: "/socket.io" });
 
-        // Simulate sensor fluctuations
-        const updatedSensors = { ...device.sensors };
-        Object.keys(updatedSensors).forEach((key) => {
-          const baseValue = updatedSensors[key];
-          const fluctuation = (Math.random() - 0.5) * (baseValue * 0.05); // 5% fluctuation
-          updatedSensors[key] = Math.max(0, baseValue + fluctuation);
-        });
+    newSocket.on("connect", () => {
+      setIsConnected(true);
+      toast.success("Connected to Factory Live Stream");
+    });
 
-        // Simulate status changes
-        let newStatus = device.status;
-        let anomalyCount = device.anomaly_count;
+    newSocket.on("disconnect", () => {
+      setIsConnected(false);
+      toast.warning("Lost connection to factory stream");
+    });
 
-        // Random chance for anomalies
-        if (Math.random() < 0.01 && device.status === "NORMAL") {
-          newStatus = "WARNING";
-          anomalyCount = 1;
-        } else if (device.status === "WARNING") {
-          anomalyCount++;
-          if (anomalyCount > 5) {
-            newStatus = "CRITICAL";
-          } else if (Math.random() < 0.3) {
-            newStatus = "NORMAL";
-            anomalyCount = 0;
-          }
-        } else if (device.status === "CRITICAL" && Math.random() < 0.1) {
-          newStatus = "NORMAL";
-          anomalyCount = 0;
+    // Listen for single device updates from the Python Consumer
+    newSocket.on("device_update", (updatedDevice: Device) => {
+      setFactoryState((prev) => {
+        // Replace the updated device in the list
+        const updatedList = prev.devices.map((d) =>
+          String(d.id) === String(updatedDevice.id) ? updatedDevice : d
+        );
+
+        // If it's a new device we didn't have before, add it
+        if (
+          !prev.devices.find((d) => String(d.id) === String(updatedDevice.id))
+        ) {
+          updatedList.push(updatedDevice);
         }
 
-        // Update efficiency based on status
-        let efficiency = device.efficiency || 95;
-        if (newStatus === "WARNING") efficiency = Math.max(70, efficiency - 5);
-        if (newStatus === "CRITICAL")
-          efficiency = Math.max(40, efficiency - 15);
-        if (newStatus === "NORMAL" && device.status !== "NORMAL")
-          efficiency = Math.min(98, efficiency + 10);
+        const kpis = calculateKPIs(updatedList);
 
         return {
-          ...device,
-          sensors: updatedSensors,
-          status: newStatus,
-          anomaly_count: anomalyCount,
-          efficiency,
-          lastAnomaly: newStatus !== "NORMAL" ? new Date() : device.lastAnomaly,
+          devices: updatedList,
+          totalEnergyConsumption: kpis.totalEnergy,
+          oee: kpis.oee,
+          plantStatus: kpis.plantStatus,
+          lastUpdated: new Date(),
         };
       });
 
-      // Calculate KPIs
-      const totalDevices = updatedDevices.length;
-      const onlineDevices = updatedDevices.filter(
-        (d) => d.status !== "OFF"
-      ).length;
-      const normalDevices = updatedDevices.filter(
-        (d) => d.status === "NORMAL"
-      ).length;
-
-      const availability = onlineDevices / totalDevices;
-      const quality = normalDevices / onlineDevices || 0;
-      const performance = 0.95; // Assumed performance rate
-      const oee = availability * quality * performance * 100;
-
-      const criticalDevices = updatedDevices.filter(
-        (d) => d.status === "CRITICAL"
-      );
-      const warningDevices = updatedDevices.filter(
-        (d) => d.status === "WARNING"
-      );
-
-      let plantStatus: Device["status"] = "NORMAL";
-      if (criticalDevices.length > 0) plantStatus = "CRITICAL";
-      else if (warningDevices.length > 0) plantStatus = "WARNING";
-
-      const totalEnergyConsumption = updatedDevices.reduce((sum, device) => {
-        return sum + (device.energyConsumption || 0);
-      }, 0);
-
-      return {
-        devices: updatedDevices,
-        totalEnergyConsumption,
-        oee,
-        plantStatus,
-        lastUpdated: new Date(),
-      };
+      // Update the selected device modal if it's open
+      if (
+        selectedDevice &&
+        String(selectedDevice.id) === String(updatedDevice.id)
+      ) {
+        setSelectedDevice(updatedDevice);
+      }
     });
-  }, []);
 
-  // Device actions
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [selectedDevice]);
+
+  // 3. Device Actions (Restart/Shutdown)
   const handleDeviceAction = useCallback(
-    (deviceId: string, action: "shutdown" | "restart") => {
-      // Set feedback for visual indication on map
+    async (deviceId: string, action: "shutdown" | "restart") => {
       setDeviceActionFeedback({ deviceId, action });
+      setTimeout(() => setDeviceActionFeedback(null), 3000);
 
-      // Clear feedback after animation
-      setTimeout(() => {
-        setDeviceActionFeedback(null);
-      }, 3000);
+      try {
+        const endpoint =
+          action === "shutdown" ? "/api/shutdown" : "/api/restart";
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ deviceId }),
+        });
 
-      setFactoryState((prev) => ({
-        ...prev,
-        devices: prev.devices.map((device) => {
-          if (device.id === deviceId) {
-            if (action === "shutdown") {
-              return { ...device, status: "OFF", isOnline: false };
-            } else if (action === "restart") {
-              return {
-                ...device,
-                status: "NORMAL",
-                anomaly_count: 0,
-                isOnline: true,
-                efficiency: 95,
-              };
-            }
-          }
-          return device;
-        }),
-      }));
+        if (response.ok) {
+          toast.success(`Device ${action} command sent.`);
+        } else {
+          toast.error("Failed to send command.");
+        }
+      } catch (e) {
+        console.error(e);
+        toast.error("Network error sending command.");
+      }
     },
     []
   );
@@ -212,39 +174,31 @@ export function FactoryDashboard() {
     setSelectedDevice(device);
   }, []);
 
-  // Calculate KPIs for display
-  const kpiData: KPIData = {
-    oee: factoryState.oee,
-    energyEfficiency: 85, // Calculated separately
-    plantStatus: factoryState.plantStatus,
-    deviceUptime:
-      (factoryState.devices.filter((d) => d.isOnline).length /
-        factoryState.devices.length) *
-      100,
-    totalDevices: factoryState.devices.length,
-    activeDevices: factoryState.devices.filter((d) => d.status !== "OFF")
-      .length,
-    criticalAlerts: factoryState.devices.filter((d) => d.status === "CRITICAL")
-      .length,
-  };
-
-  // Start simulation
-  useEffect(() => {
-    const interval = setInterval(updateSimulation, 5000); // Update every 5 seconds
-    return () => clearInterval(interval);
-  }, [updateSimulation]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       {/* Header */}
       <header
-        className="text-white industrial-shadow sticky top-0 z-40"
-        style={{ backgroundColor: "hsl(210 100% 20%)" }}
+        className="text-white industrial-shadow sticky top-0 z-40 transition-colors duration-500"
+        style={{
+          backgroundColor: isConnected ? "hsl(210 100% 20%)" : "hsl(0 60% 30%)",
+        }}
       >
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Energy Track</h1>
+              <h1 className="text-2xl font-bold flex items-center gap-3">
+                Energy Track
+                {!isConnected && (
+                  <span className="text-xs bg-red-500 px-2 py-1 rounded-full animate-pulse">
+                    OFFLINE
+                  </span>
+                )}
+                {isConnected && (
+                  <span className="text-xs bg-green-500 px-2 py-1 rounded-full">
+                    LIVE
+                  </span>
+                )}
+              </h1>
               <p className="text-sm opacity-90">
                 Smart Factory Energy & Safety Monitor
               </p>
@@ -254,6 +208,7 @@ export function FactoryDashboard() {
                 onClick={() => setIsAlexaOpen(true)}
                 className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
               >
+                {/* Alexa Icon */}
                 <svg
                   className="w-5 h-5"
                   viewBox="0 0 24 24"
@@ -263,12 +218,6 @@ export function FactoryDashboard() {
                 </svg>
                 Ask Alexa
               </button>
-              <a
-                href="/dashboard"
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
-              >
-                <div className="text-lg font-semibold">Dashboard</div>
-              </a>
             </div>
           </div>
         </div>
@@ -304,8 +253,8 @@ export function FactoryDashboard() {
 
         {/* Team Attribution */}
         <div className="mt-6 text-center">
-          <div className="flex items-center justify-center px-6 py-4 bg-primary-foreground/10 hover:bg-primary-foreground/20 rounded-2xl transition-colors text-4xl font-bold">
-            <span className="border-2 border-primary/50 bg-primary/30 text-primary px-4 py-2 rounded-full">
+          <div className="inline-flex items-center justify-center px-6 py-4 rounded-2xl">
+            <span className="text-muted-foreground text-sm">
               Energy Track by Team Trinetra
             </span>
           </div>

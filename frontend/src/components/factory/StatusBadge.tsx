@@ -2,37 +2,27 @@ import { cn } from "@/lib/utils";
 import { DeviceStatus } from "@/types/factory";
 
 interface StatusBadgeProps {
-  status: DeviceStatus;
+  status?: DeviceStatus; // made optional to prevent runtime crash
   className?: string;
   size?: "sm" | "md" | "lg";
 }
 
-const statusConfig: Record<DeviceStatus, { label: string; className: string }> =
-  {
-    NORMAL: {
-      label: "Normal",
-      className: "status-normal",
-    },
-    WARNING: {
-      label: "Warning",
-      className: "status-warning",
-    },
-    CRITICAL: {
-      label: "Critical",
-      className: "status-critical",
-    },
-    OFF: {
-      label: "Offline",
-      className: "status-offline",
-    },
-  };
+const statusConfig: Record<DeviceStatus, { label: string; className: string }> = {
+  NORMAL: { label: "Normal", className: "status-normal" },
+  WARNING: { label: "Warning", className: "status-warning" },
+  CRITICAL: { label: "Critical", className: "status-critical" },
+  OFF: { label: "Offline", className: "status-offline" },
+};
 
 export function StatusBadge({
   status,
   className,
   size = "md",
 }: StatusBadgeProps) {
-  const config = statusConfig[status];
+  const config =
+    status && statusConfig[status]
+      ? statusConfig[status]
+      : { label: "Unknown", className: "status-unknown" };
 
   const sizeClasses = {
     sm: "px-2 py-1 text-xs",

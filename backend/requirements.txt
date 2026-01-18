@@ -1,11 +1,13 @@
-kafka-python-ng
+confluent-kafka
 pymongo
 Flask
 Flask-Cors
 Flask-SocketIO
-python-socketio
+python-socketio[client]
 python-engineio
 numpy
+pandas
 scikit-learn
 gunicorn
 eventlet
+joblib
