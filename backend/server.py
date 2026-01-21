@@ -30,7 +30,6 @@ def restart_devices():
         return jsonify({"status": "error", "message": "Device ID is required."}), 400
     
     print(f"Server: Received restart command for {device_id}")
-    # In a real scenario, you might publish a Kafka command here
     return jsonify({"status": "success", "message": f"Device {device_id} restart initiated."})
 
 @app.route('/api/shutdown', methods=['POST'])
@@ -42,10 +41,8 @@ def shutdown_devices():
     print(f"Server: Received shutdown command for {device_id}")
     return jsonify({"status": "success", "message": f"Device {device_id} shutdown initiated."})
 
-# --- WebSocket Events ---
 @socketio.on('connect')
 def handle_connect():
-    # print('Server: Client connected to WebSocket')
     pass
 
 @socketio.on('device_update')

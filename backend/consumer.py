@@ -32,7 +32,6 @@ def run_consumer():
     print("Consumer: Listening for messages...")
     try:
         while True:
-            # Poll for messages with a timeout of 1.0 second
             msg = consumer.poll(1.0)
 
             if msg is None:
@@ -43,13 +42,11 @@ def run_consumer():
                 continue
 
             try:
-                # Decode message
                 data = json.loads(msg.value().decode('utf-8'))
                 device_id = data.get('id')
                 
                 if not device_id: continue
 
-                # Update MongoDB
                 update_payload = {k: v for k, v in data.items() if k != 'id'}
                 collection.update_one(
                     {'_id': device_id},
@@ -57,7 +54,6 @@ def run_consumer():
                     upsert=True
                 )
 
-                # Broadcast to Frontend
                 if sio.connected:
                     updated_doc = collection.find_one({'_id': device_id})
                     if updated_doc:

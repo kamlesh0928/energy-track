@@ -35,7 +35,6 @@ def run_ml_service():
     model_features = getattr(model, "feature_names_in_", [])
     print(f"ML Service: Model loaded. Features: {list(model_features)}")
 
-    # Initialize Consumer and Producer
     consumer = Consumer(config.get_consumer_config('ml-predictor'))
     consumer.subscribe([config.TOPIC_SENSOR_DATA])
     

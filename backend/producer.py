@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from confluent_kafka import Producer
 import config
 
-# --- Device Data (Same as before) ---
+# Device Data
 INITIAL_DEVICES = [
     { "id": "CNC-1", "type": "CNC_Mill", "status": "NORMAL", "sensors": { "pressure": 120, "temp": 75, "current": 12.5 }, "location": { "x": 200, "y": 300 }, "isOnline": True, "energyConsumption": 450, "efficiency": 95, "process": "Precision Milling" },
     { "id": "CNC-2", "type": "CNC_Mill", "status": "NORMAL", "sensors": { "pressure": 110, "temp": 70, "current": 11.8 }, "location": { "x": 400, "y": 150 }, "isOnline": True, "energyConsumption": 425, "efficiency": 92, "process": "Surface Finishing" },
@@ -49,7 +49,7 @@ class DeviceSimulator:
             'id': self.device['id'],
             'status': self.device['status'],
             'sensors': self.device['sensors'],
-            'location': self.device['location'],  # <--- ADD THIS LINE
+            'location': self.device['location'],
             'energyConsumption': self.device['energyConsumption'],
             'efficiency': self.device['efficiency'],
             'timestamp': datetime.now(timezone.utc).isoformat()
@@ -73,7 +73,6 @@ def run_producer():
             for sim in simulators:
                 sim.send()
             
-            # Serve delivery reports (callbacks) to keep the queue clean
             producer.poll(0)
             time.sleep(config.SIMULATION_INTERVAL)
             

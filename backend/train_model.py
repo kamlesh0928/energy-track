@@ -1,8 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
 import joblib
 import os
 import random
@@ -10,13 +8,12 @@ import random
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'failure_model.pkl')
 
 def create_synthetic_historical_data(num_records=5000):
-    # (Same logic as your original file, just ensure it returns df)
     data = []
     base_metrics = {
         'CNC_Mill': {'pressure': 115, 'temp': 72, 'current': 12.0},
         'Robot_Arm': {'vibration': 0.12, 'temp': 60, 'current': 8.5},
     }
-    # Add minimal fallback if keys missing
+
     keys = list(base_metrics.keys())
     
     for _ in range(num_records):

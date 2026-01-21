@@ -5,9 +5,8 @@ import { FactoryMap } from "./FactoryMap";
 import { DeviceModal } from "./DeviceModal";
 import { AlertsPanel } from "./AlertsPanel";
 import { AlexaVoiceChat } from "./AlexaVoiceChat";
-import { toast } from "sonner"; // Assuming sonner is used for toasts
+import { toast } from "sonner";
 
-// --- Helper: KPI Calculation ---
 const calculateKPIs = (devices: Device[]) => {
   const totalDevices = devices.length;
   if (totalDevices === 0)
@@ -65,7 +64,6 @@ export function FactoryDashboard() {
 
         const data: Device[] = await response.json();
 
-        // Ensure ID string consistency
         const mappedDevices = data.map((d) => ({ ...d, id: String(d.id) }));
         const kpis = calculateKPIs(mappedDevices);
 
@@ -85,9 +83,7 @@ export function FactoryDashboard() {
     fetchDevices();
   }, []);
 
-  // 2. Real-Time WebSocket Connection
   useEffect(() => {
-    // Connects via the Vite proxy to localhost:5001
     const newSocket = io({ path: "/socket.io" });
 
     newSocket.on("connect", () => {
@@ -100,15 +96,12 @@ export function FactoryDashboard() {
       toast.warning("Lost connection to factory stream");
     });
 
-    // Listen for single device updates from the Python Consumer
     newSocket.on("device_update", (updatedDevice: Device) => {
       setFactoryState((prev) => {
-        // Replace the updated device in the list
         const updatedList = prev.devices.map((d) =>
           String(d.id) === String(updatedDevice.id) ? updatedDevice : d
         );
 
-        // If it's a new device we didn't have before, add it
         if (
           !prev.devices.find((d) => String(d.id) === String(updatedDevice.id))
         ) {
@@ -126,7 +119,6 @@ export function FactoryDashboard() {
         };
       });
 
-      // Update the selected device modal if it's open
       if (
         selectedDevice &&
         String(selectedDevice.id) === String(updatedDevice.id)
@@ -142,7 +134,6 @@ export function FactoryDashboard() {
     };
   }, [selectedDevice]);
 
-  // 3. Device Actions (Restart/Shutdown)
   const handleDeviceAction = useCallback(
     async (deviceId: string, action: "shutdown" | "restart") => {
       setDeviceActionFeedback({ deviceId, action });
@@ -223,7 +214,6 @@ export function FactoryDashboard() {
         </div>
       </header>
 
-      {/* Factory Map and Alerts */}
       <div className="container mx-auto px-6 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Factory Map */}
@@ -245,13 +235,10 @@ export function FactoryDashboard() {
             </div>
           </div>
 
-          {/* Alerts Panel */}
           <div className="lg:col-span-1">
             <AlertsPanel devices={factoryState.devices} />
           </div>
         </div>
-
-        {/* Team Attribution */}
         <div className="mt-6 text-center">
           <div className="inline-flex items-center justify-center px-6 py-4 rounded-2xl">
             <span className="text-muted-foreground text-sm">
@@ -261,7 +248,6 @@ export function FactoryDashboard() {
         </div>
       </div>
 
-      {/* Device Details Modal */}
       <DeviceModal
         device={selectedDevice}
         open={!!selectedDevice}
@@ -270,7 +256,6 @@ export function FactoryDashboard() {
         onAlexaToggle={() => setIsAlexaOpen(true)}
       />
 
-      {/* Alexa Voice Chat */}
       <AlexaVoiceChat
         isOpen={isAlexaOpen}
         onToggle={() => setIsAlexaOpen(!isAlexaOpen)}

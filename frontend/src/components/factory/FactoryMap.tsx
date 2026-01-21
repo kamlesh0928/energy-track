@@ -85,7 +85,6 @@ export function FactoryMap({
       />
 
       {devices.map((device) => {
-        // DEFENSIVE CHECK: Skip rendering if location is missing to prevent crash
         if (
           !device.location ||
           typeof device.location.x === "undefined" ||

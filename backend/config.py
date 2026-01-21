@@ -1,24 +1,19 @@
 import os
 
-# Network
 HOST = '0.0.0.0'
 PORT = 5001
 WEB_API_URL = f'http://localhost:{PORT}'
 
-# Kafka
 KAFKA_BROKER = 'localhost:9092'
 TOPIC_SENSOR_DATA = 'factory-sensor-data'
 TOPIC_ML_INSIGHTS = 'ml-insights'
 
-# Database
 MONGO_URI = 'mongodb://localhost:27017/'
 MONGO_DB = 'factory_dashboard'
 MONGO_COLLECTION = 'devices'
 
-# Simulation
 SIMULATION_INTERVAL = 3  # Seconds
 
-# Confluent Kafka Configurations
 def get_producer_config():
     return {
         'bootstrap.servers': KAFKA_BROKER,
